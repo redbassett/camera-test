@@ -1,8 +1,7 @@
 var constraints = { video: { facingMode: "user" }, audio: false };
 
 
-const  cameraOutput = document.querySelector("#camera--output"),
-    cameraShutter = document.querySelector("#camera--shutter");
+const  frame1 = document.querySelector("#frame1");
 
 
 var imageCapture;
@@ -25,8 +24,8 @@ function gotMedia(mediaStream) {
 function takeStill() {
     imageCapture.takePhoto()
     .then(blob => {
-        cameraOutput.src = URL.createObjectURL(blob);
-        cameraOutput.onload = () => { URL.revokeObjectURL(this.src); }
+        frame1.src = URL.createObjectURL(blob);
+        frame1.onload = () => { URL.revokeObjectURL(this.src); }
     })
     .catch(error => console.error(error));
 }
