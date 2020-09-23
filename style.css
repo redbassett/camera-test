@@ -5,16 +5,22 @@ html, body {
     width: 100%;
 }
 
-#camera, #frame1{
+img.frame {
     position: fixed;
     left: 0;
     top: 0;
     height: 100%;
     width: 100%;
     object-fit: cover;
-}
-
-#frame1 {
     transform: scaleX(-1);
     filter: FlipH;
+    opacity: .1;
+}
+
+#output {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
 }
