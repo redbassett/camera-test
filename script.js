@@ -1,28 +1,34 @@
 var constraints = { video: { facingMode: "user" }, audio: false };
 
-const cameraView = document.querySelector("#camera--view"),
-      cameraOutput = document.querySelector("#camera--output"),
-      cameraSensor = document.querySelector("#camera--sensor"),
-      cameraShutter = document.querySelector("#camera--shutter");
+
+const  cameraOutput = document.querySelector("#camera--output"),
+    cameraShutter = document.querySelector("#camera--shutter");
+
+
+var imageCapture;
 
 function startCamera() {
-    navigator.mediaDevices
-        .getUserMedia(constraints)
-        .then(function(stream) {
-            track = stream.getTracks()[0];
-            cameraView.srcObject = stream;
-        })
-        .catch(function(error) {
-            console.error(error);
-        });
+    navigator.mediaDevices.getUserMedia(
+        {video: true, audio: false})
+        .then(gotMedia)
+        .catch(error => console.error(error));
 }
 
-cameraShutter.onclick = function() {
-    cameraSensor.width = cameraView.videoWidth;
-    cameraSensor.height = cameraView.videoHeight;
-    cameraSensor.getContext('2d').drawImage(cameraView, 0, 0);
-    cameraOutput.src = cameraSensor.toDataUrl('image/webp');
-    cameraOutput.classList.add('taken');
-};
+function gotMedia(mediaStream) {
+    const mediaStreamTrack = mediaStream.getVideoTracks()[0];
+    imageCapture = new ImageCapture(mediaStreamTrack);
+    console.log(imageCapture);
+
+    setInterval(takeStill, 1000);
+}
+
+function takeStill() {
+    imageCapture.takePhoto()
+    .then(blob => {
+        cameraOutput.src = URL.createObjectURL(blob);
+        cameraOutput.onload = () => { URL.revokeObjectURL(this.src); }
+    })
+    .catch(error => console.error(error));
+}
 
 window.addEventListener('load', startCamera, false);
